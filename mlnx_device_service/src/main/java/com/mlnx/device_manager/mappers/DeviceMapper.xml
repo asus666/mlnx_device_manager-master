@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mlnx.device_manager.mappers.TDeviceMapper">
+    <resultMap id="deviceAll" type="com.mlnx.device_manager.entity.Device">
+        <id property="id" column="id"></id>
+        <result property="numeration" column="numeration"></result>
+        <result property="mcuId" column="mcu_id"></result>
+        <result property="macAddress" column="mac_address"></result>
+        <result property="deviceTypeId" column="device_type_id"></result>
+        <result property="transmissionType" column="transmission_type"></result>
+        <result property="productionTime" column="production_time"></result>
+        <result property="producerId" column="production_id"></result>
+        <result property="dealerId" column="dealer_id"></result>
+        <result property="hospitalId" column="hospital_id"></result>
+        <result property="contractId" column="contract_id"></result>
+    </resultMap>
+
+    <resultMap id="deviceVoAll" type="com.mlnx.device_manager.pojo.vo.DeviceVo" extends="deviceAll">
+        <result property="dealerName" column="dealer_name"></result>
+        <result property="hospitalName" column="hospital_name"></result>
+        <result property="producerName" column="pn"></result>
+        <result property="name" column="name"></result>
+    </resultMap>
+    
+    <!-- 得到全部信息-->
+    <select id="selectDevice" resultMap="deviceVoAll">
+        select a.id,a.numeration,a.mcu_id,a.mac_address,a.transmission_type,b.`name` pn,a.production_time,c.dealer_name,d.hospital_name
+        from t_device a LEFT JOIN t_producer b on a.producer_id=b.id  left join t_dealer c on a.dealer_id=c.id LEFT JOIN t_user d on a.hospital_id=d.id LEFT join t_device_type e on a.device_type_id=e.id
+        <where>
+            <if test="deviceTypeId!=null and deviceTypeId!=''">a.device_type_id=#{deviceTypeId}</if>
+            <if test="searchKey!=null and searchKey!=''">and (a.numeration like concat('%',#{searchKey},'%') or b.name like concat('%',#{searchKey},'%') or c.dealer_name like concat('%',#{searchKey},'%'))</if>
+        </where>
+        order by a.id desc
+    </select>
+
+    <select id="selectDeviceByDealer" resultMap="deviceVoAll">
+        select a.id,a.numeration,a.mcu_id,a.mac_address,a.transmission_type,b.`name` pn,a.production_time,c.dealer_name,d.hospital_name
+        from t_device a LEFT JOIN t_producer b on a.producer_id=b.id left join t_dealer c on a.dealer_id=c.id LEFT JOIN t_user d on a.hospital_id=d.id left JOIN t_device_type e on a.device_type_id=e.id
+        <where>
+            a.device_type_id=#{deviceTypeId}
+            and a.dealer_id=#{dealerId}
+            <if test="searchKey!=null and searchKey!=''">and (a.numeration like concat('%',#{searchKey},'%') or d.hospital_name like concat('%',#{searchKey},'%'))</if>
+        </where>
+        order by a.id desc
+    </select>
+
+    <select id="selectDeviceByUser" resultMap="deviceVoAll">
+        select a.id,a.numeration,a.mcu_id,a.mac_address,a.transmission_type,b.`name` pn,a.production_time,c.dealer_name,d.hospital_name
+        from t_device a LEFT JOIN t_producer b on a.producer_id=b.id left join t_dealer c on a.dealer_id=c.id LEFT JOIN t_user d on a.hospital_id=d.id left JOIN t_device_type e on a.device_type_id=e.id
+        <where>
+            a.device_type_id=#{deviceTypeId}
+            and a.hospital_id=#{hospitalId}
+            <if test="searchKey!=null and searchKey!=''">and (a.numeration like concat('%',#{searchKey},'%') or a.transmission_type like concat('%',#{searchKey},'%'))</if>
+        </where>
+        order by a.id desc
+    </select>
+
+    <!--得到单条信息-->
+    <select id="getOne" resultMap="deviceVoAll">
+        select a.id,a.numeration,a.mcu_id,a.mac_address,a.transmission_type,b.`name` pn,a.production_time,c.dealer_name,d.hospital_name,
+        (select (case name when 'BP_DEVICE' then '血压设备'when 'SPO_DEVICE' then '血糖设备'when 'ECG_DEVICE' then '心电设备'when 'MP_DEVICE' then '心电多参设备'else '空的' end)name from t_device_type left join t_device on t_device.device_type_id=t_device_type.id where t_device.id=#{id}) name
+        from t_device a LEFT JOIN t_producer b on a.producer_id=b.id  left join t_dealer c on a.dealer_id=c.id LEFT JOIN t_user d on a.hospital_id=d.id LEFT join t_device_type e on a.device_type_id=e.id
+        where a.id=#{id}
+    </select>
+
+    <!--deviceId传进去出来各个时间点记录出过什么事情
+    <select id="getProductionTime" resultMap="deviceVoAll">
+        select a.production_time,b.deliver_date,c.back_date,a.numeration,b.remark,c.remark from t_device a left join t_contract b on a.contract_id=b.id left join t_device_malfunction c on a.id=c.device_id where (a.production_time or b.deliver_date or c.back_date) in(select a.production_time,b.deliver_date,c.back_date from t_device a left join t_contract b on a.contract_id=b.id left join t_device_malfunction c on a.id=c.device_id where a.device_id=#{id})
+
+        select a.production_time,a.numeration from t_device a where a.id=#{id};
+        select b.deliver_date,b.numeration,b.remark from t_contract b left join t_device a on a.contract_id=b.id where a.id=#{id};
+        select c.back_date,c.remark,c.state from t_device_malfunction c left join t_device a on a.id=c.device_id where a.id=#{id};
+
+    </select>-->
+
+
+    <!--<select id="selectDeviceCount" resultType="Integer">
+        select count(*)
+        from t_device a LEFT JOIN t_producer b on a.producer_id=b.id left join t_dealer c on a.dealer_id=c.id LEFT JOIN t_user d on a.hospital_id=d.id
+        where a.device_type_id=#{id}
+    </select>-->
+
+    <!--<select id="selectBatchDealer" resultType="Device">
+        select b.id,b.dealer_name from t_device a left join t_dealer b on a.dealer_id=b.id where a.id in
+        <foreach item="ids" collection="array" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </select>-->
+</mapper>

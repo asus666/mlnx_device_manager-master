@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mlnx.device_manager.mappers.TContractMapper">
+    <resultMap id="contractMap" type="com.mlnx.device_manager.entity.Contract">
+        <id property="id" column="id"></id>
+        <result property="numeration" column="numeration"></result>
+        <result property="dealerId" column="dealer_id"></result>
+        <result property="hospitalId" column="hospital_id"></result>
+        <result property="deliverDate" column="deliver_date"></result>
+        <result property="signer" column="signer"></result>
+        <result property="remark" column="remark"></result>
+    </resultMap>
+    <resultMap id="contractAll" type="com.mlnx.device_manager.pojo.vo.ContractVo" extends="contractMap">
+        <result property="dealerName" column="dealer_name"></result>
+        <result property="hospitalName" column="hospital_name"></result>
+    </resultMap>
+
+    <select id="getOne" resultMap="contractAll">
+        select a.id,a.numeration,b.dealer_name,c.hospital_name,a.deliver_date,a.signer,a.remark,b.id dealer_id,c.id hospital_id from t_contract a LEFT JOIN t_dealer b on a.dealer_id=b.id LEFT JOIN t_user c on a.hospital_id=c.id
+        where a.id=#{id}
+    </select>
+
+
+    <!--select id="selectCIN" resultType="Contract">
+        select id,numeration from t_contract
+    </select-->
+    
+    <!--select id="selectDN" resultMap="contractAll">
+        select b.numeration from t_contract a left join t_device b on a.id=b.contract_id where a.id=#{id} and b.numeration is not null;
+    </select-->
+
+    <!--select id="selectDNC" resultType="java.lang.Integer" >
+        select count(*)  from t_contract a left join t_device b on a.id=b.contract_id where a.id=#{id} and b.numeration is not null;
+    </select-->
+
+
+
+    <select id="selectCNS" resultMap="contractAll">
+        select a.numeration,b.dealer_name,c.hospital_name,a.deliver_date,a.signer,a.remark,d.id from t_contract a LEFT JOIN t_dealer b on a.dealer_id=b.id LEFT JOIN t_user c on a.hospital_id=c.id left join t_device d on a.id=d.contract_id
+        <where>
+          <if test="searchKey!=null and searchKey!=''">a.numeration like concat ('%',#{searchKey},'%') or a.signer like concat ('%',#{searchKey},'%')</if>
+        </where>
+        order by a.id desc
+    </select>
+</mapper>

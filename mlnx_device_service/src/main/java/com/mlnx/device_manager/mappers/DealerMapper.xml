@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mlnx.device_manager.mappers.TDealerMapper">
+
+    <!--select id="selectDIN" resultType="Dealer">
+        select id,dealer_name from t_dealer
+    </select-->
+
+    <select id="selectDR" resultType="Dealer">
+        select id,dealer_name,linkman,phone,address from t_dealer
+        <where>
+            <if test="searchKey!=null and searchKey!=''">dealer_name like concat('%',#{searchKey},'%') or linkman like concat('%',#{searchKey},'%') or phone like concat('%',#{searchKey},'%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <!--select id="selectDRO" resultType="Dealer">
+        select id,dealer_name,linkman,phone,address from t_dealer where id=#{id}
+    </select-->
+
+
+</mapper>

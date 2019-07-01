@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/device_manager_web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mlnx_device_api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mlnx_device_core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mlnx_device_service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mlnx_device_service_api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/base-netty-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/mlnx-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-base" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-druid" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-dubbo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-lcn" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-mongodb" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-mybatis" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-redis" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-rest" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-rocketmq" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-swagger" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-parent/spring-zookeeper" charset="UTF-8" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>

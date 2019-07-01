@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace表示命名空间，值必须为接口的名称(包括包名)  -->
+<!--实现类没有，mybatis框架会生成接口的实现类  -->
+<mapper namespace="com.mlnx.device_manager.mappers.TLifeCycleMapper">
+    <select id="selectList" resultType="LifeCycle">
+        select distinct a.id,end_point,event,remark from t_lifecycle a left join t_device b on a.end_point=b.production_time where device_id=#{id}
+        order by a.id desc
+    </select>
+
+</mapper>

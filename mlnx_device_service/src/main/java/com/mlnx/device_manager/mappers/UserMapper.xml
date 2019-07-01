@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mlnx.device_manager.mappers.TUserMapper">
+    <resultMap id="userMap" type="com.mlnx.device_manager.entity.User">
+        <id property="id" column="an"></id>
+        <result property="name" column="name"></result>
+        <result property="password" column="password"></result>
+        <result property="linkman" column="linkman"></result>
+        <result property="hospitalName" column="hospital_name"></result>
+        <result property="address" column="address"></result>
+        <result property="dealerId" column="dealer_id"></result>
+    </resultMap>
+    <resultMap id="userAll" type="com.mlnx.device_manager.pojo.vo.UserVo" extends="userMap">
+        <result property="dealerName" column="dealer_name"></result>
+    </resultMap>
+
+    <!--根据经销商id得到医院>
+    <select id="selectUIN" resultMap="userMap">
+        select a.id an,a.hospital_name from t_user a left join t_dealer b on a.dealer_id=b.id where a.dealer_id=#{id}
+    </select-->
+    <!-- 得到所有数据加搜索-->
+    <select id="selectHP" resultMap="userAll">
+        select a.id an,a.name,a.linkman,a.hospital_name,a.address,b.dealer_name,a.isnative from t_user a left join t_dealer b on a.dealer_id=b.id
+        <where>
+            <if test="dealerId!=null and dealerId!=''">a.dealer_id=#{dealerId}</if>
+            <if test="searchKey!=null and searchKey!=''">and a.hospital_name like concat('%',#{searchKey},'%') or a.linkman like concat('%',#{searchKey},'%') or a.name like concat('%',#{searchKey},'%')</if>
+        </where>
+        order by a.id desc
+</select>
+    <!-- 得到一条数据
+    <select id="selectHPO" resultMap="userAll">
+        select a.id an,a.name,a.linkman,a.hospital_name,a.address,b.dealer_name,a.isnative,b.id dealer_id from t_user a left join t_dealer b on a.dealer_id=b.id where a.id=#{id}
+    </select-->
+</mapper>

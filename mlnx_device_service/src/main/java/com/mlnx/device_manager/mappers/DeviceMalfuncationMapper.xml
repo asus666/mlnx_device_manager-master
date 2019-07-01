@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mlnx.device_manager.mappers.TDeviceMalfunctionMapper">
+    <resultMap id="malfunctionMap" type="com.mlnx.device_manager.entity.DeviceMalfunction">
+        <id property="id" column="an"></id>
+        <result property="deviceId" column="device_id"></result>
+        <result property="malfunction" column="malfunction"></result>
+        <result property="backDate" column="back_date"></result>
+        <result property="remark" column="remark"></result>
+        <result property="state" column="state"></result>
+    </resultMap>
+    <resultMap id="malfunctionAll" type="com.mlnx.device_manager.pojo.vo.MalfunctionVo" extends="malfunctionMap">
+        <result property="numeration" column="numeration"></result>
+    </resultMap>
+
+    <!--select id="selectDMF"  resultMap="malfunctionAll">
+        select a.id an,b.numeration,a.malfunction,a.back_date,a.state,a.remark
+        from t_device_malfunction a LEFT JOIN t_device b on a.device_id=b.id
+    </select-->
+
+    <select id="selectNDP" resultMap="malfunctionAll">
+        select a.id an,b.numeration,
+        malfunction,
+        a.back_date,a.remark,device_id,
+        a.state
+        from t_device_malfunction a LEFT JOIN t_device b on a.device_id=b.id
+        <where>
+            <if test="searchKey!=null and searchKey!=''">b.numeration like concat('%',#{searchKey},'%') or a.malfunction like concat('%',#{searchKey},'%')</if>
+        </where>
+        order by a.id desc
+    </select>
+
+    <!--select id="selectIM" resultType="DeviceMalfunction">
+        select id,malfunction from t_device_malfunction
+    </select-->
+
+    <select id="getOne" resultMap="malfunctionAll">
+        select a.id an,b.numeration,a.malfunction,a.back_date,a.state,a.remark
+        from t_device_malfunction a LEFT JOIN t_device b on a.device_id=b.id
+        where a.id=#{id}
+    </select>
+
+    <!--select id="getMalRecords" resultMap="malfunctionAll">
+        select a.back_date,a.malfunction,a.state,a.remark
+        from t_device_malfunction a LEFT JOIN t_device b on a.device_id=b.id
+        where b.id=#{id}
+    </select-->
+
+</mapper>
